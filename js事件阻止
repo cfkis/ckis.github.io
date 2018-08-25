@@ -1,0 +1,18 @@
+2018-08-25 周六 深圳-坪洲
+
+三种事件阻止方式
+
+1.event.preventDefault()
+  
+  阻止特定事件的默认行为(只有 cancelable 设置为 true 的事件才可以使用)
+  并不阻止事件冒泡
+  列如：阻止 forme submit; 阻止<a>标签页面刷新等 
+
+2.event.stopPropagation()
+  立即停止事件在 DOM 层次中的传播，即阻止事件冒泡
+  并不阻止默认行为
+
+3.return false
+  阻止事件传播
+  阻止冒泡
+  阻止默认行为
