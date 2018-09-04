@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>vue 2.4 $attr $listener</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <com-attr/>
+  </div>
+</body>
+<script>
+  // 父组件
+  Vue.component('com-attr', {
+    template: `<div> 
+                <p> 父组件 attrs: {{ val1 + ', ' + val2  + ' , '+ val3 }}</p>
+                <hr/>
+                <child-com1 :p1='val1' :p2="val2" :p3="val3"  @action1="action1P" @action2="action2P" />
+              </div>`,
+    data () {
+      return {
+        val1: 'sky-1',
+        val2: 'sky-2',
+        val3: 'sky-3'
+      }
+    },
+    methods: {
+      action1P () {
+        alert('action--1--p')
+      },
+      action2P () {
+        alert('action--2--p')
+      }
+    }
+  })
+
+  // 子组件 child-com1
+  Vue.component('child-com1', {
+    props: ['p1'],
+    inheritAttrs: true, 
+		data () {
+			return {
+				a: 'hello'
+			}
+		},
+    template: `<div class="child1">
+                <p>子组件 attrs: {{ $attrs }} </p>
+                <button @click="childEmitP1">childEmitP1</button>
+                <child-com2  v-on="$listeners" v-bind="$attrs" :hello="a"/>
+              </div>`,
+    created () {
+      console.log(this.$listeners, this.$attrs)
+    },
+    methods: {
+      childEmitP1 () {
+        this.$emit('action1')
+      }
+    }
+  })
+
+  // 嵌套组件
+  Vue.component('child-com2', {
+    porps: ['hello'],
+    template: `<div class="child-com2" style="background:orange;">
+                <p>嵌套组件 attrs：{{ $attrs }} </p>
+                <button @click="openP">嵌套按钮触发父组件事件</button>
+              </div>
+              `,
+    inheritAttrs: false,
+    methods: {
+      openP () {
+        this.$emit('action1')
+        this.$emit('action2')
+      }
+    }          
+  })
+
+
+  new Vue({
+    el: '#app',
+    
+  })
+
+</script>
+
+</html>
