@@ -1,0 +1,11 @@
+#官方解释
+inheritAttrs: 
+默认值true,这种情况下父作用域的不被认作props的特性绑定将会'回退'作为普通的HTML特性应用在子组件的根元素上
+
+$attrs:
+包含了父作用域中不作为 prop 被识别 (且获取) 的特性绑定 (class 和 style 除外)
+可以通过 v-bind="$attrs" 传入内部组件
+
+$listeners:
+包含了父作用域内的（不含.navtive修饰的）v-on监听器
+可以通过v-on="$listeners"传入内部组件
