@@ -1,0 +1,20 @@
+> 在vue中响应式数据是在初始化时定义在data中，这会使数据变成响应式毫无疑问。
+正是这种自信导致当数据发生异常，没有按照预期响应时，我们可能会一脸懵逼，各种找原因。
+对于这种问题回归问题本质（其实其它很多问题也是如此），既然数据未按预期响应，肯定是数据本身出了差错：
+1. 数据在其它多个地方响应了变化，导致不是“当前”预期值
+2. 已经脱离响应式
+
+对于情况一，断点调试，不难发现问题。这里讨论第二种情况。
+
+原因说明：响应式数据被“遗失”
+
+假设在data上存在formModel = { name: '', age: '', addr: '' } 通过v-model绑定在表单中。
+随后我们去后台拉取数据填充formModel, 可能会这样操作【 this.formModel = response.data 】,咋一看没什么问题，
+除非response.data中有所有formModel中的字段，否则缺失的字段就会失去响应，
+比如 response.data = { name : '', age: ''}，此时formModel中的addr就失去响应。
+
+这种问题既简单又难于发现！
+
+我的解决办法： 继承 Object.assign()
+
+eg: this.formModel = Object.assign(this.formModel, response.data)
