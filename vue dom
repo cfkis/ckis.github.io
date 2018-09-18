@@ -1,0 +1,11 @@
+vue采用虚拟Dom技术来渲染响应页面，因此dom刷新是个异步动作。
+我们在开发中不免会有操作dom，为了保证dom操作能够给正确被处理，需要等待dom正在挂载后再进行操作，
+即： this.$nextTick(() = > {
+        // dom operation ...
+        
+        // dom crud
+        
+        // dom event
+        
+     })
+          
