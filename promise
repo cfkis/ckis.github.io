@@ -1,0 +1,76 @@
+
+// 下载图片
+function loadImg(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = function() {
+      resolve(img)
+    }
+    img.onerror = reject
+    img.src = url
+  })
+}
+
+// 插入DOM
+function addToHtml(img) {
+  document.querySelector('.pics').appendChild(img)
+}
+
+
+1.并发按顺序处理结果（以加载图片为例）
+
+const urls = ['1.jpg', '2.jpg']
+const promises = urls.map(loadImg)
+
+// 写法： for 
+let task = Promise.resolve()
+for (let i = 0; i  < promises.length; i++) {
+  task = task.then(() => promise[i]).then(addToHtml)
+}
+
+// 写法： reduce
+promises.reduce((task, imgPromise) => {
+  return task.then(()=> imgPromise).then(addToHtml)
+}, Promise.resolve())
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+2.控制最大并发数（比如一次加载6张，加载完成继续加载后面6张，不足则加载全部）
+/**
+* urls 
+* handler -> loadImg
+* stepNum -> 一次并发数量
+**/
+function stepLoad (urls, handler, stepNum) {
+  
+  // 组装一组‘并发promise’
+  const createPromises = function (now, stepNum) {
+    // 有可能图片数量小于stepNum，所以取当前索引与总数量的最小值
+    let last = Math.min(stepNum + now, urls.length)  
+    // 返回一组并发数
+    return urls.slice(now, last).map(hanlder)
+  }
+  
+  let step = Promise.resolve()
+  for (let i = 0; i < urls.length; i += stepNum) {
+    step = setp
+      .then(() => {
+        let promises = createPromises(i, stepNum)
+        return promises.reduce((task, imgPromise, index) => {
+          return task
+            .then( () => imgPromise)
+            .then( () => {
+                console.log(`第 ${index + 1 + i} 张图片加载完成.`)
+            })
+        }, Promise.resolve())
+       })
+       .then(() => {
+          let current = Math.min(i + stepNum, urls.length)
+          console.log(`>> 总共${current}张已经加载完！`)
+       })
+  }
+  return step
+}
+
+
+
