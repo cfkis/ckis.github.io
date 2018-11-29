@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>实现Redux</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    .change-text {
+      height: 40px;
+      padding: 12px;
+      background: green;
+      outline: none;
+      border: 1px solid green;
+      color: #fff;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .change-text:hover {
+      background: rgb(8, 122, 8);
+    }
+    .change-style {
+      height: 40px;
+      padding: 12px;
+      background: #4f544f;
+      border: 1px solid #6b776b;
+      color: #fff;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .change-style:hover {
+      background: #363a36;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1 id="title"></h1>
+
+  <button onclick="changeText()" class="change-text">change text</button>
+  <button onclick="changeStyle()" class="change-style">change style</button>
+
+  <script>
+
+    function createStore (state, stateChanger) {
+      
+      const listeners = []
+      const subscribe = (listener) => {
+        return listeners.push(listener) // 添加订阅者
+      }
+
+      const getState = () => state
+      const dispatch = (action) => {
+        state = stateChanger(state, action)
+        listeners.forEach((listener) => {
+          return listener() // 执行更新
+        })
+      }
+      return { getState, dispatch, subscribe }
+    }
+
+    function renderApp (newState, oldState = {}) {
+      if (newState === oldState) return
+      renderTitle(newState.title, oldState.title)
+    }
+    // update title
+    function renderTitle (newTitle, oldTitle = {}) {
+      if (newTitle === oldTitle) return
+      console.log('update title...', newTitle )
+      const titleDOM = document.getElementById('title')
+      titleDOM.innerHTML = newTitle.text
+      titleDOM.style.color = newTitle.color
+    }
+
+    
+    // state
+    let appState = {
+      title: {
+        text: 'head',
+        color: 'red',
+      }
+    }
+    
+    // actions
+    function stateChanger (state, action) {
+      switch (action.type) {
+        case 'UPDATE_TITLE_TEXT':
+          return {
+            ...state,
+            title: {
+              text: action.text,
+              ...state.color
+            }
+          }
+          break
+        case 'UPDATE_TITLE_COLOR':
+          return {
+            ...state,
+            title: {
+              ...state.title ,
+              color: action.color
+            }
+          }
+          break
+        default:
+          return state
+          break
+      }
+    }
+
+    const store = createStore(appState, stateChanger)
+    // 首次渲染页面
+    renderApp(store.getState()) 
+    var oldState = store.getState()
+    store.subscribe(() => { 
+      const newState = store.getState()
+      console.log('监听数据变化 new value ：', newState)
+      
+      renderApp(newState, oldState)
+      oldState = newState
+    }) 
+   
+    
+    function changeText() {
+      store.dispatch({ type: 'UPDATE_TITLE_TEXT', text: '我变了'+ Math.random(1000) })
+    }
+    
+    function changeStyle() {
+      store.dispatch({ type: 'UPDATE_TITLE_COLOR', color: `rgb(${getRandomInt(10, 255)}, ${getRandomInt(100, 155)}, ${getRandomInt(130, 255)})` })
+    }
+    
+    function getRandomInt(min, max) {
+      min = Math.ceil(min); 
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min; // The maximum is exclusive and the minimum is inclusive
+    }
+
+  </script>
+</body>
+</html>
