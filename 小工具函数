@@ -1,0 +1,47 @@
+/**
+ * @description 文件下载
+ * @param {*} content 文件内容
+ * @param {*} fileName 文件名
+ * @param {*} suffix 文件格式 
+ * @author chifukang 
+ * @returns
+ */
+const downLoadFile = (content, fileName, suffix) => {
+  const aEle = document.createElement('a')
+  const blob = new Blob([content])
+  aEle.download = `${fileName}.${suffix}`
+  aEle.href = URL.createObjectURL(blob)
+  aEle.click()
+}
+
+/**
+ * @description 计算文件大小
+ * @param {*} number
+ * @author chifukang 
+ */
+const returnFileSize = (number) => {
+  if(number < 1024) {
+    return { size: number, unit: 'bytes'}
+  } else if(number > 1024 && number < 1048576) {
+    return { size: (number/1024).toFixed(1), unit: 'KB' }
+  } else if(number > 1048576) {
+    return { size: (number/1048576).toFixed(1), unit: 'MB' }
+  }
+}
+
+/**
+ * @description HTML白名单
+ * @param {*} str
+ * @author chifukang 
+ */
+const htmlEntity = (str) => {
+  if(!str || typeof(str) !== 'string') return str
+	str = str.replace(/&/g, "&amp;")
+	str = str.replace(/</g, "&lt;")
+	str = str.replace(/>/g, "&gt;")
+	str = str.replace(/"/g, "&quto;")
+	str = str.replace(/'/g, "&##39;")
+	str = str.replace(/`/g, "&##96;")
+  str = str.replace(/\//g, "&##x2F;")
+  return str
+}
