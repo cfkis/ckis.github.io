@@ -1,4 +1,16 @@
-按属性对objet分类
+【数组求和】
+const sum = [0, 1, 2, 3, 4].reduce((acc, cur) => acc + cur, 0)
+
+[数组去重]
+let arr = [11,22,34,22]
+let result = arr.sort().reduce((init, current) => {
+   if (init.length === 0 || init[init.length -1] !== current) {
+    init.push(current)
+   }
+   return init
+}, [])
+
+【按属性对objet分类】
 let people = [
   { name: 'Alice', age: 21 },
   { name: 'Max', age: 20 },
