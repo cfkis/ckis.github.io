@@ -1,0 +1,26 @@
+按属性对objet分类
+let people = [
+  { name: 'Alice', age: 21 },
+  { name: 'Max', age: 20 },
+  { name: 'Jane', age: 20 }
+]
+
+function groupBy(objectArray, property) {
+  
+  return objetArray.reduce( (acc, obj) => {
+    const key = obj[property]
+    if (!acc[key]) acc[key] = []
+    acc[key].push(obj)
+    return acc
+  }, {})
+
+}
+
+// groupedPeople is:
+// { 
+//   20: [
+//     { name: 'Max', age: 20 }, 
+//     { name: 'Jane', age: 20 }
+//   ], 
+//   21: [{ name: 'Alice', age: 21 }] 
+// }
