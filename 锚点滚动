@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>scroll</title>
+  <style>
+    *{
+      padding: 0;
+      margin: 0;
+    }
+    
+    .wrapper {
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    dl {
+      width: 180px;
+      background: #cfc4c4;
+      float: left;
+      position: fixed;
+      left: 15px;
+      top: 30%;
+    }
+    dl dt {
+      line-height: 30px;
+      padding: 6px 12px;
+      cursor: pointer;
+      overflow: hidden;
+    }
+    dl dt:hover {
+      background: lightslategray;
+      color: #fff;
+      transition: all 0.25s;
+    }
+
+    dl dt.active {
+      background: green;
+      color: #fff;
+    }
+
+    .content {
+      float: right;
+      width: calc(100% - 200px);
+      margin-left: 20px;
+      background: wheat;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <dl id="nav-dl">
+      <dt name="Travel" class="active">旅游</dt>
+      <dt name="info">资讯</dt>
+      <dt name="technology">科技</dt>
+      <dt name="life">生活</dt>
+    </dl>
+    
+    <div class="content">
+      <section id="Travel">
+        <p>#旅游</p>
+        <div style="height:400px;background-color:white;">
+
+        </div>
+      </section>
+      <section id="info">
+        <p>#资讯</p>
+        <div style="height:400px;background-color:rgb(68, 40, 40);">
+            
+          </div>
+      </section>
+      <section id="technology">
+        <p>#科技</p>
+        <div style="height:400px;background-color:rgb(212, 150, 150);">
+
+        </div>
+      </section>
+      <section id="life">
+        <p>#生活</p>
+        <div style="height:400px;background-color:rgb(236, 223, 223);">
+
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+<script>
+
+  /**
+   * 
+   * 动画方式实现移动
+   * @param y 移动距离 - 上移动 ；+ 下移动
+   * @param duration 动画持续时间
+   * @return
+   * */
+  function scrollTo(y, duration) {
+    /*y:目标纵坐标,duration:时间(毫秒)*/
+    var scrollTop = document.body.scrollTop;/*页面当前滚动距离*/
+    var distance = y - scrollTop;/*结果大于0,说明目标在下方,小于0,说明目标在上方*/
+    var scrollCount = duration / 10;/*10毫秒滚动一次,计算滚动次数*/
+    var everyDistance = distance / scrollCount/*滚动距离除以滚动次数计算每次滚动距离*/
+    for (var index = 1; index <= scrollCount; index++) /*循环设置scrollBy事件,在duration之内,完成滚动效果*/
+      setTimeout(function () { window.scrollBy(0, everyDistance) }, 10 * index);
+      // window.requestAnimationFrame(function () { window.scrollBy(0, everyDistance) })
+  }
+
+  document.getElementById('nav-dl').addEventListener('click', function(e) {
+
+    var nodeNames = ['Travel', 'info', 'technology', 'life']
+    var nodeName = e.target.getAttribute('name')
+    var index = nodeNames.indexOf(nodeName)
+    // 锚点导航
+    // window.location.href = '#' + nodeNames[index] 此方式无动画
+
+    let distance = document.getElementById(nodeName).getBoundingClientRect().y    
+    scrollTo(distance , 800)
+
+    // 导航栏 active 切换
+    var dts = this.children
+    for (var i = 0; i < dts.length; i++) {
+      dts[i].setAttribute('class', '')
+    }
+    e.target.setAttribute('class', 'active')
+  
+  }, false)
+
+
+  document.addEventListener('scroll', function(e){
+    
+    var idHash = getVisibleSection()
+    
+    if (idHash) {
+
+      var dts = document.getElementById('nav-dl').children
+      for (var i = 0; i < dts.length; i++) {
+        dts[i].setAttribute('class', '')
+        if (dts[i].getAttribute('name') === idHash) {
+          dts[i].setAttribute('class', 'active')
+        }
+      }
+    }
+
+  })
+
+  /**
+   * 
+   * 判断某个区块是否大致位于可见区域中部左右
+   * 条件：70% 高度可见 
+   * @param top 距离顶部常量值
+   * @param proportion 区块高度比例
+   * @return id
+   * */
+  function getVisibleSection(proportion = 0.7) {
+    
+    const sections = document.getElementsByClassName('content')[0].getElementsByTagName('section')
+
+    for(let i = 0;i < sections.length; i++) {
+      
+      const rect = sections[i].getBoundingClientRect()
+      // 当前区块可见区域高度
+      const visibleHeight = rect.height - (rect.bottom - window.innerHeight)
+      if (rect.y >= 0 && rect.height * proportion < visibleHeight) {
+        return sections[i].getAttribute('id')
+        break
+      }
+    }
+
+  }
+
+</script>
+
+</body>
+</html>
