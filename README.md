@@ -11,3 +11,7 @@
 
 
 <img src="https://github.com/cfkis/less-to-more/blob/master/A7B3332B-A8ED-43eb-A6AE-6D40317616EC.png" />
+
+比如: 锚点效果
+
+<img src="https://github.com/cfkis/less-to-more/blob/master/锚点实现效果图.png" />
