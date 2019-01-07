@@ -1,0 +1,16 @@
+function bubble(arr) {
+  let len = arr.length
+  let flag = len
+  while(flag > 0) {
+    flag = 0
+    for (let i = 1; i < len; i++) {
+      if (arr[i-1] > arr[i]) {
+        const temp = arr[i-1]
+        arr[i] = arr[i-1]
+        arr[i-1] = temp
+        flag = i // 设置最新边界
+      }
+    }
+    len = flag // 记录遍历边界
+  }
+}
