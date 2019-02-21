@@ -1,0 +1,6 @@
+1.https://www.sqlite.org/download.html 下载Sqltie3
+
+2.执行（如果没有添加到系统变量中，可将sqlite包放入.svn目录即可）：
+sqlite3 wc.db
+select *  from work_queue;
+delete from work_queue;
