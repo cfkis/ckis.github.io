@@ -1,0 +1,40 @@
+
+背景：
+  当前同一应用打开多个tab页时，怎么共享数据？又怎么在应用“退出”后清除数据？
+  
+方案：
+  
+  let sessionVal = sessionStorage.getItem('key')
+  if (sessionVal) {
+    localStorage.setItem('key', sessionVal)
+    
+    // 应用计数 +1
+    localStorage.setItem('key_copy_count', localStorage.getItem('key_copy_count') + 1 )
+  }
+  
+  
+  let localVal = localStorage.getItem('key')
+  if (localVal) {
+    sessionStorage.setItem('key', localVal)
+  }
+  
+  window.onunload = function() {
+    // 清除时机
+    // 引用计数为 1，即：只有一个页签时
+    let key_copy_count = localStorage.getItem('key_copy_count')
+    if (key_copy_count == 1) {
+      localStorage.removeItem('key')
+    }    
+  }
+  
+  解释：
+  sessionStorage 在页签关闭后自动删除信息，sessionStorage 永久保存数据。
+  所以同时在 sessionStorage和localStorage保存数据，既可以实现多页共享数据。
+  window.onunload 是为了在关闭页签后删除localStorage数据，但sessionStorage数据依然存在。
+  
+  
+  其它更多处理可借助
+  
+  storage event.
+
+  
