@@ -1,0 +1,36 @@
+generateExcel (jsonData) {
+      
+      // 输出base64编码
+      function base64 (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+
+      const headers = ['4px单号', '自定义单号', '收件人姓名', '收件人电话', '国家', '收件地址', '包裹内件（商品）', '身份证号', 
+                      '身份证状态', '产品服务', '增值服务']
+      // 添加头
+      let str = '<tr>'
+      headers.forEach(col => {
+        str += `<td>${col}</td>`
+      })
+      str += '</tr>'
+      // 内容
+      for(let i = 0 ; i < jsonData.length ; i++ ){
+        str+='<tr>'
+        for(let item in jsonData[i]){
+          // 增加\t为了不让表格显示科学计数法或者其他格式
+          str+=`<td>${ jsonData[i][item] + '\t'}</td>`    
+        }
+        str+='</tr>'
+      }
+      // Worksheet名
+      let worksheet = 'Sheet1'
+      let uri = 'data:application/vnd.ms-excel;base64,'
+      let template = `<html xmlns:o="urn:schemas-microsoft-com:office:office" 
+      xmlns:x="urn:schemas-microsoft-com:office:excel" 
+      xmlns="http://www.w3.org/TR/REC-html40">
+      <head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>
+        <x:Name>${worksheet}</x:Name>
+        <x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>
+        </x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->
+        </head><body><table>${str}</table></body></html>`
+      // 下载模板
+      window.location.href = uri + base64(template)
+    },
