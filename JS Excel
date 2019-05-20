@@ -1,3 +1,5 @@
+
+// JSON to Excel
 generateExcel (jsonData) {
       
       // 输出base64编码
@@ -33,4 +35,31 @@ generateExcel (jsonData) {
         </head><body><table>${str}</table></body></html>`
       // 下载模板
       window.location.href = uri + base64(template)
+    }
+    
+// 流转Excel
+// post请求设置 blob
+axios: responseType: 'arraybuffer'
+
+  downloadBlob(res) {
+  
+      const blob = new Blob([res])
+      const blobUrl = window.URL.createObjectURL(blob)
+      
+      const a = document.createElement('a')
+      a.style.display = 'none'
+      const d = new Date()
+      a.download = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}.xlsx`
+      a.href = blobUrl
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
     },
+
+   
+      
+
+
+
+
+    
