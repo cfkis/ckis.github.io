@@ -1,0 +1,10 @@
+在JS中四舍五入的函数 toFixed(n) , n为要保留的小数位数。 n为0~20，当n超过20的时候，JS会出错。
+
+如果小数点前和要截取的前一位都是0时，不会按常理截取。
+
+方法是：使用toFixed方法之前加1，使用之后再减去1。
+
+var num = 0.007;//要四舍五入的数字  
+var fixNum = new Number(num+1).toFixed(2);//四舍五入之前加1  
+var fixedNum = new Number(fixNum - 1).toFixed(2);//四舍五入之后减1，再四舍五入一下  
+alert(fixedNum);//弹出的数字就是正确的四舍五入结果啦
