@@ -1,3 +1,13 @@
+function dataURLtoBlob(dataurl) {
+			let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+			bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+			while(n--){
+			  u8arr[n] = bstr.charCodeAt(n);
+			}
+			return new Blob([u8arr], {type:mime});
+}
+
+
 /**
  * 根据图片 URL 下载图片
  * @param imgsrc 图片 url
@@ -18,10 +28,16 @@
         context.drawImage(image, 0, 0, image.width, image.height)
         
         let url = canvas.toDataURL('image/' + type)
+        
+        // 修复 chorme 下载 ““网络错误”” 
+        // 不用浏览器对url length 限制
+				    let blob = dataURLtoBlob(url)
+				    let objurl = URL.createObjectURL(blob)
+        
         let a = document.createElement('a')
         let event = new MouseEvent('click')
-        a.download = name || 'name'
-        a.href = url
+        a.download = (name || 'name') + '.' +  type
+        a.href = objurl
         a.dispatchEvent(event)
     }
  }
